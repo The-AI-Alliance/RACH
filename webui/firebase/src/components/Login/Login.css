@@ -1,0 +1,36 @@
+/* src/components/Login/Login.css */
+
+.login-container {
+    max-width: 400px;
+    margin: 50px auto;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-group .btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 80%;
+    margin: 0 auto;
+    backdrop-filter: blur(10px); /* Optional for a frosted glass effect */
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparency for a see-through effect */
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-group .btn {
+    width: 100%;
+    margin-top: 10px;
+}
