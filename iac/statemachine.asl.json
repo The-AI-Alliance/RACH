@@ -1,0 +1,142 @@
+{
+	"Comment": "Websocket StateMachine",
+	"StartAt": "Parallel",
+	"States": {
+		"Parallel": {
+			"Type": "Parallel",
+			"Next": "Ask bedrock",
+			"Branches": [
+				{
+					"StartAt": "Fetch history",
+					"States": {
+						"Fetch history": {
+							"Type": "Task",
+							"Parameters": {
+								"TableName": "${ContextTable}",
+								"KeyConditionExpression": "PK = :pk",
+								"ExpressionAttributeValues": {
+									":pk": {
+										"S.$": "$.ConnectionID"
+									}
+								}
+							},
+							"Resource": "arn:aws:states:::aws-sdk:dynamodb:query",
+							"End": true
+						}
+					}
+				},
+				{
+					"StartAt": "Fetch context",
+					"States": {
+						"Fetch context": {
+							"Type": "Task",
+							"End": true,
+							"Parameters": {
+								"IndexId": "${KendraId}",
+								"QueryText.$": "$.data.message",
+								"PageSize": 60
+							},
+							"Resource": "arn:aws:states:::aws-sdk:kendra:query",
+							"Catch": [
+								{
+									"ErrorEquals": [
+										"Kendra.ValidationException"
+									],
+									"Next": "Error: payload",
+									"ResultPath": "$.kendraError"
+								}
+							]
+						},
+						"Error: payload": {
+							"Type": "Task",
+							"Resource": "arn:aws:states:::apigateway:invoke",
+							"Parameters": {
+								"ApiEndpoint": "${WSApi}",
+								"Method": "POST",
+								"Stage": "${WSApiStage}",
+								"Path.$": "States.Format('/@connections/{}', $.ConnectionID)",
+								"RequestBody": "**The payload was too large for Amazon Kendra, please limit your question to 1000 characters.**",
+								"AuthType": "IAM_ROLE"
+							},
+							"Next": "Exit state machine"
+						},
+						"Exit state machine": {
+							"Type": "Fail"
+						}
+					}
+				}
+			],
+			"ResultPath": "$.contentResults"
+		},
+		"Ask bedrock": {
+			"Type": "Task",
+			"Resource": "arn:aws:states:::lambda:invoke",
+			"Parameters": {
+				"Payload.$": "$",
+				"FunctionName": "${PromptFunction}"
+			},
+			"Retry": [
+				{
+					"ErrorEquals": [
+						"Lambda.ServiceException",
+						"Lambda.AWSLambdaException",
+						"Lambda.SdkClientException",
+						"Lambda.TooManyRequestsException"
+					],
+					"IntervalSeconds": 1,
+					"MaxAttempts": 3,
+					"BackoffRate": 2
+				}
+			],
+			"Next": "Update history",
+			"ResultPath": "$.fullResults",
+			"TimeoutSeconds": 60,
+			"Catch": [
+				{
+					"ErrorEquals": [
+						"States.Timeout",
+						"States.TaskFailed"
+					],
+					"Next": "Error: invocation",
+					"Comment": "Warn user of issue",
+					"ResultPath": "$.PromptError"
+				}
+			]
+		},
+		"Error: invocation": {
+			"Type": "Task",
+			"Resource": "arn:aws:states:::apigateway:invoke",
+			"Parameters": {
+				"ApiEndpoint": "${WSApi}",
+				"Method": "POST",
+				"Stage": "${WSApiStage}",
+				"Path.$": "States.Format('/@connections/{}', $.ConnectionID)",
+				"RequestBody": "**There was an error, please try again later.**",
+				"AuthType": "IAM_ROLE"
+			},
+			"End": true
+		},
+		"Update history": {
+			"Type": "Task",
+			"Resource": "arn:aws:states:::dynamodb:putItem",
+			"Parameters": {
+				"TableName": "${ContextTable}",
+				"Item": {
+					"PK": {
+						"S.$": "$.ConnectionID"
+					},
+					"SK": {
+						"N.$": "$.timestamp"
+					},
+					"question": {
+						"S.$": "$.data.message"
+					},
+					"answer": {
+						"S.$": "$.fullResults.Payload"
+					}
+				}
+			},
+			"End": true
+		}
+	}
+}

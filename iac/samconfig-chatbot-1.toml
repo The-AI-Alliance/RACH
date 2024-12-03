@@ -1,0 +1,9 @@
+version = 0.1
+[default.deploy.parameters]
+stack_name = "chatbot-1"
+resolve_s3 = true
+s3_prefix = "chatbot-1"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "ApiStageName=\"api\" KendraIndex=\"<Kendra Index>\" BedrockModel=\"anthropic.claude-3-5-sonnet-20240620-v1:0\" AnthropicVersion=\"bedrock-2023-05-31\""
+image_repositories = []
