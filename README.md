@@ -3,11 +3,9 @@
 A **RA**g-**CH**atbot framework used to demonstrate the [AI Alliance](https://github.com/The-AI-Alliance) [trust, safety](https://the-ai-alliance.github.io/trust-safety-user-guide/) and [evaluation](https://github.com/The-AI-Alliance/trust-safety-evals) initiatves.
 
 
-
 ![alt text](./images/NoRag.png)
 
 ![alt text](./images/Rag.png)
-
 
 ## Overview
 ![alt text](./images/Serverless.png)
