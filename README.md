@@ -3,14 +3,14 @@
 A **RA**g-**CH**atbot framework used to demonstrate the [AI Alliance](https://github.com/The-AI-Alliance) [trust, safety](https://the-ai-alliance.github.io/trust-safety-user-guide/) and [evaluation](https://github.com/The-AI-Alliance/trust-safety-evals) initiatves.
 
 **Chatbot without RAG:**
-![alt text](../images/NoRag.png)
+![alt text](./images/NoRag.png)
 
 **Chatbot with RAG:**
-![alt text](../images/Rag.png)
+![alt text](./images/Rag.png)
 
 
 ## Overview
-![alt text](../images/Serverless.png)
+![alt text](./images/Serverless.png)
 
 This framework consists of three components implemented using Amazon Web Services (AWS) Serverless:
 1. RAG storage and retrieval
@@ -18,7 +18,7 @@ This framework consists of three components implemented using Amazon Web Service
 3. User Interface
 
 ### RAG storage and retrieval
-![alt text](../images/RagStack.png)
+![alt text](./images/RagStack.png)
 
 The RAG storage and retrieval components is implemented using [Amazon's Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/). It consists of two stacks:
 
@@ -32,7 +32,7 @@ The RAG storage and retrieval components is implemented using [Amazon's Cloud De
     - all the IAM roles and policies to allow Kendra to read / index the documents in the S3 bucket
 
 ### Inference
-![alt text](../images/Inference.png)
+![alt text](./images/Inference.png)
 
 The inference engine is implemented using [Amazon's Serverless Application Model (SAM)](https://aws.amazon.com/serverless/sam/). It is based on a reference implementation publised on [AWS Serverlessland](https://github.com/shafkevi/lambda-bedrock-s3-streaming-rag).
 
