@@ -36,7 +36,7 @@ function Header() {
   return (
     <Navbar bg="light" expand="lg" className="mb-3">
       <Navbar.Brand as={Link} to="/" style={{ paddingLeft: "20px" }}>
-        RAG App
+        Agent Demo
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
@@ -44,7 +44,7 @@ function Header() {
           <Nav.Link as={Link} to="/chatbot">Chatbot</Nav.Link>
 
           {/* Dropdown for Evaluations */}
-          <Dropdown>
+          <!-- Dropdown>
             <Dropdown.Toggle variant="light" id="evaluations-dropdown">
               Evaluations
             </Dropdown.Toggle>
@@ -59,14 +59,14 @@ function Header() {
             </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item as={Link} to="/adddata">Add Data</Dropdown.Item>
-            <Dropdown.Item as={Link} to="/files">View Files</Dropdown.Item>
+            <Dropdown.Item as={Link} to="/files">View Files</Dropdown.Item -->
           </Dropdown.Menu></Dropdown>
           {/* Initialize User Button */}
-          {user && !userDocExists && (
-            <Button variant="outline-primary" onClick={initializeUser}>
+          {/* user && !userDocExists && ( */}
+            <!-- Button variant="outline-primary" onClick={initializeUser}>
               Initialize User
-            </Button>
-          )}
+            </Button -->
+          {*/ ) /*}
         </Nav>
       </Navbar.Collapse>
     </Navbar>
